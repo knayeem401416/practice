@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php'; // your DB connection file
+include 'db.php';
 
 $errorMsg = "";
 $successMsg = "";
@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($ID) || empty($password) || empty($userType)) {
         $errorMsg = "Please fill in all fields.";
     } else {
-        // ✅ Check all 3: ID, password, and user type
         $sql = "SELECT * FROM user WHERE user_id = ? AND password = ? AND type = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "sss", $ID, $password, $userType);
@@ -21,11 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = mysqli_stmt_get_result($stmt);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            // ✅ Match found
             $_SESSION['ID'] = $ID;
             $_SESSION['userType'] = $userType;
 
-            // show success alert before redirect
             $successMsg = "Login Successful!";
             $redirectPage = "";
 
@@ -54,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            // ❌ Login failed
             $errorMsg = "❌ Login failed!";
         }
 
@@ -70,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <title>BU Tech 360</title>
+    <title>Sign Up - BU Tech 360</title>
 </head>
 
 <style>
@@ -81,12 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .show-login {
-        display: flex; /* or whatever display type your JS uses */
+        display: flex;
     }
 
     .login__error {
-        background-color: #ffe0e0; /* light red background */
-        color: #b30000;            /* dark red text */
+        background-color: #ffe0e0;
+        color: #b30000;
         padding: 10px;
         border-radius: 6px;
         font-weight: 600;
@@ -182,45 +178,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <i class="ri-close-line login__close" id="login-close"></i>
     </div>
 
-    <!--==================== CONTACT FORM ====================-->
+    <!--==================== Create Account ====================-->
+
     <div class="container" style="margin-top: 150px;">
         <div class="row justify-content-center bg-light border rounded" style="width: 50%; margin-left: auto; margin-right: auto;">
             <div class="col-md-8 mt-5">
-                
+
                 <?php if (isset($_GET['success'])): ?>
-                    <div class="alert alert-success text-center">Your message has been sent successfully!</div>
+                    <div class="alert alert-success text-center">
+                        Signup successful! Your User ID is: <strong><?php echo htmlspecialchars($_GET['id']); ?></strong>
+                    </div>
                 <?php elseif (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger text-center">There was an error sending your message. Please try again.</div>
+                    <div class="alert alert-danger text-center">
+                        There was an error. Please try again.
+                    </div>
                 <?php endif; ?>
 
-                <form action="contact.php" method="post">
+                <form action="signup_action.php" method="POST" enctype="multipart/form-data">
+                    <h2 class="text-center mb-4">Create Account</h2>
+
                     <div class="form-group mb-3">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <label>First Name</label>
+                        <input type="text" name="f_name" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="mobile">Mobile Number:</label>
-                        <input type="text" class="form-control" id="mobile" name="mobile" required>
+                        <label>Last Name</label>
+                        <input type="text" name="l_name" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="subject">Subject:</label>
-                        <input type="text" class="form-control" id="subject" name="subject" required>
+                        <label>Contact</label>
+                        <input type="text" name="contact" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="message">Message:</label>
-                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
                     </div>
 
-                    <input type="submit" class="btn btn-primary mt-2 mb-5 w-100" name="send-message" value="Send Message">
+                    <div class="form-group mb-3">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Age</label>
+                        <input type="number" name="age" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Gender</label>
+                        <select name="gender" class="form-control" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>User Type</label>
+                        <select name="type" class="form-control" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Student">Student</option>
+                            <option value="Officer">Officer</option>
+                            <option value="Director">Director</option>
+                            <option value="Mentor">Mentor</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>Profile Picture</label>
+                        <input type="file" name="profile_pic" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-5">Sign Up</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!--==================== FOOTER ====================-->
+    <!--==================== Footer ====================-->
+
     <div class="footer-container">
         <div class="footer-logo">
             <img src="bulogo.png" alt="">

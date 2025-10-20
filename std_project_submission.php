@@ -1,10 +1,8 @@
 <?php
-include 'db.php';
+  include 'db.php';
 
-session_start();
-$id = $_SESSION['ID'];
-
-
+  session_start();
+  $id = $_SESSION['ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +15,7 @@ $id = $_SESSION['ID'];
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <title>BU Tech 360</title>
 </head>
+
 <style>
   #img-logo {
     position: fixed;
@@ -66,6 +65,19 @@ $id = $_SESSION['ID'];
   <div class="row project-submit" style="margin: 150px 0px auto auto; justify-content: center;">
     <div class="col-lg-6 mb-3 mb-sm-0">
       <div class="card">
+        <?php
+          if (isset($_SESSION['message'])) {
+            echo '<div class="container mt-4">
+                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                        <i class="ri-check-line" style="font-size: 1.2rem; margin-right: 10px;"></i>
+                        <div>' . $_SESSION['message'] . '</div>
+                    </div>
+                  </div>';
+            unset($_SESSION['message']);
+          }
+        ?>
+
+
         <div class="card-body">
           <h3 class="card-title">Project data Entry</h3>
           <form class="row g-3" action="student_project_connect.php" method="post" enctype="multipart/form-data">
@@ -75,31 +87,64 @@ $id = $_SESSION['ID'];
             </div>
 
             <div class="col-md-4">
-              <label for="validationDefaultUsername" class="form-label">Mentor ID</label>
+              <label for="validationDefaultUsername" class="form-label">Mentor</label>
               <div class="input-group">
-                <input type="text" class="form-control" id="validationDefaultUsername" aria-describedby="inputGroupPrepend2" name="mentor_id" placeholder="ID MUST EXIST IN DB" required />
+                <select class="form-select" id="mentor_id" name="mentor_id" required>
+                  <option value="">Select Mentor</option>
+                  <?php
+                  // Fetch mentors from the user table
+                  $mentors = mysqli_query($conn, "SELECT user_id, f_name, l_name FROM user WHERE type = 'mentor'");
+                  while ($mentor = mysqli_fetch_assoc($mentors)) {
+                      // Display full name and user_id in the option
+                      echo "<option value='{$mentor['user_id']}'>{$mentor['f_name']} {$mentor['l_name']} (ID: {$mentor['user_id']})</option>";
+                  }
+                  ?>
+                </select>
               </div>
             </div>
-            <div class="col-md-3">
-              <label for="validationDefault03" class="form-label">Student 1</label>
-              <input value=<?= $id ?> class="form-control" id="validationDefault03" name="student_id1" placeholder="ID MUST EXIST IN DB" required />
+
+            <div class="col-12 mb-3">
+              <label class="form-label">Number of Students</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="num_students" id="num1" value="1" checked>
+                <label class="form-check-label" for="num1">1</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="num_students" id="num2" value="2">
+                <label class="form-check-label" for="num2">2</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="num_students" id="num3" value="3">
+                <label class="form-check-label" for="num3">3</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="num_students" id="num4" value="4">
+                <label class="form-check-label" for="num4">4</label>
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="validationDefault03" class="form-label">Student 2</label>
-              <input type="text" class="form-control" id="validationDefault03" name="student_id2" placeholder="ID MUST EXIST IN DB" />
+
+            <div class="col-12 d-flex gap-2" id="student-container">
+              <div class="col-md-3" id="student1">
+                <label for="validationDefault03" class="form-label">Student 1</label>
+                <input value=<?= $id ?> class="form-control" id="validationDefault03" name="student_id1" readonly />
+              </div>
+              <div class="col-md-3" id="student2">
+                <label for="validationDefault03" class="form-label">Student 2</label>
+                <input type="text" class="form-control" id="validationDefault03" name="student_id2" placeholder="ID MUST EXIST IN DB" required/>
+              </div>
+              <div class="col-md-3" id="student3">
+                <label for="validationDefault03" class="form-label">Student 3</label>
+                <input type="text" class="form-control" id="validationDefault03" name="student_id3" placeholder="ID MUST EXIST IN DB" required/>
+              </div>
+              <div class="col-md-3" id="student4">
+                <label for="validationDefault03" class="form-label">Student 4</label>
+                <input type="text" class="form-control" id="validationDefault03" name="student_id4" placeholder="ID MUST EXIST IN DB" required/>
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="validationDefault03" class="form-label">Student 3</label>
-              <input type="text" class="form-control" id="validationDefault03" name="student_id3" placeholder="ID MUST EXIST IN DB" />
-            </div>
-            <div class="col-md-3">
-              <label for="validationDefault03" class="form-label">Student 4</label>
-              <input type="text" class="form-control" id="validationDefault03" name="student_id4" placeholder="ID MUST EXIST IN DB" />
-            </div>
+
             <div class="col md-4">
               <label for="validationDefault04" class="form-label">Upload pdf </label>
               <input type="file" class="form-control" name="pdf" id="pdf">
-
             </div>
 
 
@@ -112,7 +157,24 @@ $id = $_SESSION['ID'];
         </div>
       </div>
     </div>
+
     <script src="homepage.js"></script>
+    
+    <script>
+      const studentFields = [1, 2, 3, 4].map(i => document.getElementById('student'+i));
+      const radios = document.querySelectorAll('input[name="num_students"]');
+
+      function toggleStudents() {
+        const num = parseInt(document.querySelector('input[name="num_students"]:checked').value);
+        studentFields.forEach((field, index) => {
+          field.style.display = (index < num) ? 'block' : 'none';
+          field.querySelector('input').required = index < num;
+        });
+      }
+
+      radios.forEach(radio => radio.addEventListener('change', toggleStudents));
+      window.onload = toggleStudents; // Initial display
+    </script>
 </body>
 
 </html>

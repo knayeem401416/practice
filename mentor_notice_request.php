@@ -65,10 +65,7 @@ $id = $_SESSION['ID'];
     <!-- <img src="bulogo.png" alt="" id="img-logo"> -->
 
     <section>
-
-
         <div class="row" style="margin-top: 150px; margin-bottom:80px; margin-left:50px; margin-right:50px ">
-
             <div class="col-lg-12" id="media_2">
                 <div class="card">
                     <div class="card-body">
@@ -79,7 +76,7 @@ $id = $_SESSION['ID'];
                                 <input type="text" class="form-control" id="validationDefault06" name="title" required />
                             </div>
                             <div class="col-md-4">
-                                <label for="validationDefault04" class="form-label">Priority lecvel</label>
+                                <label for="validationDefault04" class="form-label">Priority level</label>
                                 <select class="form-select" id="validationDefault04" name="priority_level" required>
                                     <option selected disabled value="">Choose...</option>
                                     <option value="high">High</option>
@@ -91,16 +88,16 @@ $id = $_SESSION['ID'];
                             <div class="col-md-4">
                                 <label for="validationDefaultUsername" class="form-label">Posted By </label>
                                 <div class="input-group">
-                                    <input value=<?= $id ?> type="text" class="form-control" id="validationDefaultUsername" aria-describedby="inputGroupPrepend2" name="posted_by" placeholder="ID MUST EXIST IN DB" required />
+                                    <input value=<?= $id ?> type="text" class="form-control" id="validationDefaultUsername" aria-describedby="inputGroupPrepend2" name="posted_by" readonly/>
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <label for="validationDefault07" class="form-label">Content</label>
-                                <textarea type="text" class="form-control" id="validationDefault07" name="content" required>
-                  </textarea>
+                                <textarea type="text" class="form-control" id="validationDefault07" name="content" required></textarea>
                             </div>
 
-                            <div class="col-12" style="margin-top: 70px;">
+                            <div class="col-12" style="margin-top: 30px;">
                                 <button class="btn btn-primary" type="submit">
                                     Submit form
                                 </button>
@@ -112,9 +109,6 @@ $id = $_SESSION['ID'];
             </div>
         </div>
     </section>
-
-    <!--==================== PENDING LIST ====================-->
-
 
     <script src="mentor_dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

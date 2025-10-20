@@ -40,7 +40,7 @@ include 'db.php'; // Make sure this file contains your DB connection
                     <li class="nav__item"><a href="officer_dashboard.php" class="nav__link">Dashboard</a></li>
                     <li class="nav__item"><a href="data_entry.php" class="nav__link">Data Entry</a></li>
                     <li class="nav__item"><a href="data_view.php" class="nav__link">Data View</a></li>
-                    <li class="nav__item"><a href="notice_review_and_post.php" class="nav__link">Notice Review</a></li>
+                    <li class="nav__item"><a href="notice_review_and_post.php" class="nav__link">Notice Review and Post</a></li>
                 </ul>
             </div>
             <div class="nav__actions">
@@ -93,7 +93,7 @@ include 'db.php'; // Make sure this file contains your DB connection
             <div class="col-lg-10">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title">Add New Notice</h3>
+                        <h3 class="card-title">Add Notice Board</h3>
                         <form class="row g-3" action="officer_notice_review_connect_2.php" method="post">
                             <div class="col-md-4">
                                 <label class="form-label">Title</label>

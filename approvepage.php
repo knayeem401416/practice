@@ -127,7 +127,7 @@
                         <td><?= $project_title ?></td>
                         <td><?= $mentor_id ?></td>
                         <td><?= $student_id1 ?></td>
-                        <td><?= $student_id2 ?></td>
+                        <td><?= !empty($student_id2) ? $student_id2 : 'N/A' ?></td>
                         <td><a href="pdf/<?= $pdf ?>" download><?= $pdf ?></a></td>
                         <td><?= $status ?></td>
                         <td>
@@ -137,7 +137,8 @@
                                     <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
                                 <?php endif; ?>
                                 <?php if ($status != 'Rejected') : ?>
-                                    <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                                    <!-- <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button> -->
+                                    <button type="button" name="action" value="reject" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" data-project-id="<?= $project_id ?>">Reject</button>
                                 <?php endif; ?>
                             </form>
                         </td>
@@ -150,23 +151,41 @@
     </table>
 
     <?php
-    if (isset($_POST['project_id'], $_POST['action'])) {
+    // if (isset($_POST['project_id'], $_POST['action'])) {
 
+    //     $project_id = $_POST['project_id'];
+    //     $action = $_POST['action'];
+
+    //     if ($action == "approve") {
+    //         $sql = "UPDATE projects SET status='Approved' WHERE project_id='$project_id'";
+    //     } else if ($action == "reject") {
+    //         $sql = "UPDATE projects SET status='Rejected' WHERE project_id='$project_id'";
+    //     }
+
+    //     $resut = mysqli_query($conn, $sql);
+    // }
+    if (isset($_POST['project_id'], $_POST['action'])) {
         $project_id = $_POST['project_id'];
         $action = $_POST['action'];
 
         if ($action == "approve") {
             $sql = "UPDATE projects SET status='Approved' WHERE project_id='$project_id'";
-        } else if ($action == "reject") {
-            $sql = "UPDATE projects SET status='Rejected' WHERE project_id='$project_id'";
+        } elseif ($action == "reject") {
+            $comment = mysqli_real_escape_string($conn, $_POST['comment']);
+            $sql = "UPDATE projects SET status='Rejected', comment='$comment' WHERE project_id='$project_id'";
         }
 
-        $resut = mysqli_query($conn, $sql);
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>window.location.href = window.location.href;</script>";
+            exit;
+        } else {
+            echo "<div class='alert alert-danger text-center mt-3'>❌ Database Error: " . mysqli_error($conn) . "</div>";
+        }
     }
     ?>
 
     <!--==================== APPROVED LIST ====================-->
-    <h1 class="h12">Approved List </h1>
+    <h1 class="h12">Approved List</h1>
 
     <table class="table table table-striped table-hover table-bordered">
 
@@ -210,7 +229,7 @@
                         <td><?= $project_title ?></td>
                         <td><?= $mentor_id ?></td>
                         <td><?= $student_id1 ?></td>
-                        <td><?= $student_id2 ?></td>
+                        <td><?= !empty($student_id2) ? $student_id2 : 'N/A' ?></td>
                         <td><a href="pdf/<?= $pdf ?>" download><?= $pdf ?></a></td>
                         <td><?= $status ?></td>
                     </tr>
@@ -222,7 +241,7 @@
     </table>
 
     <!--==================== REJECTED LIST ====================-->
-    <h1 class="h12">Rejected List </h1>
+    <h1 class="h12">Rejected List</h1>
 
     <table class="table table table-striped table-hover table-bordered">
 
@@ -236,13 +255,14 @@
                 <th scope="col">2nd Student ID</th>
                 <th scope="col">PDF</th>
                 <th scope="col">Status</th>
+                <th scope="col">Comment</th>
             </tr>
         </thead>
 
         <?php
         include 'db.php';
 
-        $sql = "SELECT project_id, project_title, mentor_id, student_id1, student_id2, status, pdf FROM  projects WHERE status = 'Rejected' ORDER BY project_id ASC";
+        $sql = "SELECT project_id, project_title, mentor_id, student_id1, student_id2, status, pdf, comment FROM  projects WHERE status = 'Rejected' ORDER BY project_id ASC";
         $query = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($query) > 0) {
@@ -258,6 +278,7 @@
                 $student_id2 = $info['student_id2'];
                 $pdf = $info['pdf'];
                 $status = $info['status'];
+                $comment = $info['comment'];
             ?>
                 <tbody>
                     <tr>
@@ -266,9 +287,10 @@
                         <td><?= $project_title ?></td>
                         <td><?= $mentor_id ?></td>
                         <td><?= $student_id1 ?></td>
-                        <td><?= $student_id2 ?></td>
+                        <td><?= !empty($student_id2) ? $student_id2 : 'N/A' ?></td>
                         <td><a href="pdf/<?= $pdf ?>" download><?= $pdf ?></a></td>
                         <td><?= $status ?></td>
+                        <td><?= $comment ?></td>
                     </tr>
                 </tbody>
         <?php
@@ -277,7 +299,37 @@
         ?>
     </table>
 
+    <!-- Reject Comment Modal -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form method="post" action="">
+            <div class="modal-body">
+            <input type="hidden" name="project_id" id="modal_project_id">
+            <input type="hidden" name="action" value="reject">
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <textarea class="form-control" name="comment" id="comment" rows="3" placeholder="Enter your feedback..." required></textarea>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Submit</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
 
+    <script>
+    // Pass project_id to modal when Reject button is clicked
+    const rejectModal = document.getElementById('rejectModal');
+    rejectModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        const projectId = button.getAttribute('data-project-id');
+        document.getElementById('modal_project_id').value = projectId;
+    });
+    </script>
 
     <script src="homepage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

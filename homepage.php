@@ -1,91 +1,69 @@
 <?php
+session_start();
+include 'db.php'; // your DB connection file
 
-$invalid = 0;
+$errorMsg = "";
+$successMsg = "";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $ID = trim($_POST['id']);
+    $password = trim($_POST['password']);
+    $userType = trim($_POST['userType']);
 
-    include 'db.php';
-
-    $ID = $_POST['id'];
-    $password = $_POST['password'];
-    $userType = $_POST['userType'];
-
-    if ($userType == 'student') {
-        $std = "SELECT * from user where user_id='$ID' and password='$password'";
-        $result = mysqli_query($conn, $std);
-        if ($result) {
-            $num = mysqli_num_rows($result);
-            if ($num > 0) {
-?>
-                <script>
-                    alert("login sucessful!!")
-                </script>
-            <?php
-                $invalid = 0;
-                session_start();
-                $_SESSION['ID'] = $ID;
-                $_SESSION['userType'] = $userType;
-                header('location:std_dashboard.php');
-            }
-            ?>
-            <script>
-                alert("imposterr!")
-            </script>
-<?php
-        }
-    } elseif ($userType == 'director') {
-        $std = "SELECT * from user where user_id='$ID' and password='$password'";
-        $result = mysqli_query($conn, $std);
-        if ($result) {
-            $num = mysqli_num_rows($result);
-            if ($num > 0) {
-                $invalid = 0;
-                session_start();
-                $_SESSION['ID'] = $ID;
-                header('location:director_dashboardpage.php');
-            }
-        }
-    } elseif ($userType == 'officer') {
-        $std = "SELECT * from user where user_id='$ID' and password='$password'";
-        $result = mysqli_query($conn, $std);
-        if ($result) {
-            $num = mysqli_num_rows($result);
-            if ($num > 0) {
-                $invalid = 0;
-                session_start();
-                $_SESSION['ID'] = $ID;
-                header('location:officer_dashboard.php');
-            }
-        }
-    } elseif ($userType == 'mentor') {
-        $std = "SELECT * from user where user_id='$ID' and password='$password'";
-        $result = mysqli_query($conn, $std);
-        if ($result) {
-            $num = mysqli_num_rows($result);
-            if ($num > 0) {
-                $invalid = 0;
-                session_start();
-                $_SESSION['ID'] = $ID;
-                header('location:mentor_dashboardpage.php');
-            }
-        }
-    } elseif ($userType == 'trainer') {
-        $std = "SELECT * from user where user_id='$ID' and password='$password'";
-        $result = mysqli_query($conn, $std);
-        if ($result) {
-            $num = mysqli_num_rows($result);
-            if ($num > 0) {
-                $invalid = 0;
-                session_start();
-                $_SESSION['ID'] = $ID;
-                header('location:trainer_dashboard.php');
-            }
-        }
+    if (empty($ID) || empty($password) || empty($userType)) {
+        $errorMsg = "Please fill in all fields.";
     } else {
-        $invalid = 1;
+        // ✅ Check all 3: ID, password, and user type
+        $sql = "SELECT * FROM user WHERE user_id = ? AND password = ? AND type = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "sss", $ID, $password, $userType);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            // ✅ Match found
+            $_SESSION['ID'] = $ID;
+            $_SESSION['userType'] = $userType;
+
+            // show success alert before redirect
+            $successMsg = "Login Successful!";
+            $redirectPage = "";
+
+            switch ($userType) {
+                case 'student':
+                    $redirectPage = "std_dashboard.php";
+                    break;
+                case 'director':
+                    $redirectPage = "director_dashboardpage.php";
+                    break;
+                case 'officer':
+                    $redirectPage = "officer_dashboard.php";
+                    break;
+                case 'mentor':
+                    $redirectPage = "mentor_dashboardpage.php";
+                    break;
+                default:
+                    $errorMsg = "Invalid user type.";
+            }
+
+            if ($redirectPage !== "") {
+                echo "<script>
+                    alert('$successMsg');
+                    window.location.href = '$redirectPage';
+                </script>";
+                exit;
+            }
+        } else {
+            // ❌ Login failed
+            $errorMsg = "❌ Login failed!";
+        }
+
+        mysqli_stmt_close($stmt);
     }
 }
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -98,6 +76,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="homepage.css">
     <title>BU Tech 360</title>
 </head>
+
+<style>
+    .login {
+        display: none;
+    }
+
+    .show-login {
+        display: flex; /* or whatever display type your JS uses */
+    }
+
+    .login__error {
+        background-color: #ffe0e0; /* light red background */
+        color: #b30000;            /* dark red text */
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 10px;
+        border: 1px solid #ffb3b3;
+    }
+</style>
 
 <body>
     <header class="header" id="header">
@@ -152,15 +151,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form action="homepage.php" class="login__form" method="POST">
             <h2 class="login__title">Log In</h2>
 
+            <?php if (!empty($errorMsg)): ?>
+                <div class="login__error"><?= htmlspecialchars($errorMsg) ?></div>
+            <?php endif; ?>
+
             <div class="login__group">
                 <div>
                     <label for="id" class="login__label">ID</label>
-                    <input type="text" placeholder="Enter your ID" id="id" name="id" class="login__input">
+                    <input type="text" placeholder="Enter your ID" id="id" name="id" class="login__input" required>
                 </div>
 
                 <div>
                     <label for="password" class="login__label">Password</label>
-                    <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input">
+                    <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input" required>
                 </div>
                 <div>
                     <label for="userType" class="login__label">User Type</label>
@@ -177,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div>
                 <p class="login__signup">
-                    You do not have an account? <a href="#">Sign up</a>
+                    You do not have an account? <a href="signup.php">Sign up</a>
                 </p>
 
                 <a href="#" class="login__forgot">
@@ -207,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <a href="">
                     <button class="overlay-button-1">Learn More</button>
                 </a>
-                <a href="">
+                <a href="signup.php">
                     <button class="overlay-button-2">Sign Up</button>
                 </a>
             </div>
@@ -308,7 +311,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 10px; color: hsl(230, 12%, 40%); font-size: 40px;"><i class="ri-instagram-fill"></i></div>
         </div>
     </div>
+    
     <script src="homepage.js"></script>
+    <?php if (!empty($errorMsg)): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("login").classList.add("show-login"); // open the login box
+            });
+        </script>
+    <?php endif; ?>
+
 </body>
 
 </html>

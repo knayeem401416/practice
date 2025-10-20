@@ -19,24 +19,32 @@ $type = $_SESSION['userType'];
     <title>BU Tech 360</title>
 </head>
 <style>
-    .h11 {
-        margin-top: 150px;
-        margin-bottom: 50px;
-        text-align: center;
-        color: black;
-        font-weight: bold;
+    a {
+        text-decoration: none;
     }
 
-    tr {
+    .card-header {
         text-align: center;
     }
 
-    .h12 {
+    /* #card_1 {
+        text-align: center;
+        justify-content: center;
+
+    } */
+    /* #card_1 {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    } */
+    .card_1 {
+        margin: 0 auto;
+        float: none;
+        margin-bottom: 10px;
         margin-top: 50px;
-        margin-bottom: 50px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
         text-align: center;
-        color: black;
-        font-weight: bold;
     }
 
     .h13 {
@@ -47,30 +55,23 @@ $type = $_SESSION['userType'];
         font-weight: bold;
     }
 
-    a {
-        text-decoration: none;
-    }
-
-    .card-header {
-        text-align: center;
-    }
-
-    .card_1 {
-        margin: 0 auto;
-        float: none;
-        margin-bottom: 10px;
-        margin-top: 50px;
-    }
 
     #card_2 {
         margin: 0 auto;
         float: none;
         margin-bottom: 10px;
         margin-top: 50px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        /* text-align: center; */
     }
 
-    section {
-        margin-top: 200px;
+    .profile-details {
+        margin-top: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 30px;
     }
 
     #img-logo {
@@ -81,6 +82,13 @@ $type = $_SESSION['userType'];
         height: 100vh;
         object-fit: cover;
         opacity: .8;
+    }
+
+    .profile-pic img {
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        border-radius: 50%;
     }
 </style>
 
@@ -119,32 +127,40 @@ $type = $_SESSION['userType'];
 
     <!-- <img src="bulogo.png" alt="" id="img-logo"> -->
 
-    <!--==================== PERSONAL DETAILS    ====================-->
-    <section>
-        <?php
-        include 'db.php';
+    <div>
+        <!--==================== PROFIE DETAILS ====================-->
+        <div class="profile-details d-flex justify-content-center align-items-start gap-5">
+            <?php
+            include 'db.php';
 
-        $sql = "SELECT f_name,l_name,type FROM user where user_id = '$id'";
-        $query = mysqli_query($conn, $sql);
+            $sql = "SELECT f_name,l_name,type, profile_pic FROM user WHERE user_id = '$id'";
+            $query = mysqli_query($conn, $sql);
 
-        $info = mysqli_fetch_array($query);
-        $f_name = $info['f_name'];
-        $l_name = $info['l_name'];
-        $type = $info['type'];
-        ?>
-        <div class="card" style="width: 18rem;" id="card_2">
-            <div class="card-header">
-                Profile Details
+            $info = mysqli_fetch_array($query);
+            $f_name = $info['f_name'];
+            $l_name = $info['l_name'];
+            $type = $info['type'];
+            $profile_pic = $info['profile_pic']; // make sure you have this column in your DB
+            ?>
+            <div class="card" style="width: 18rem;" id="card_2">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <span class="fw-bold">Profile</span>
+                    <span class="profile-pic">
+                        <img src="<?= $profile_pic ?>" alt="Profile Picture" class="img-fluid rounded-circle" style="width:50px; height:50px; object-fit:cover;">
+                    </span>
+                </div>
+
+
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">ID : <?= $id ?></li>
+                    <li class="list-group-item">Name : <?= $f_name ?> <?= $l_name ?></li>
+                    <li class="list-group-item">User Type : <?= $type ?></li>
+                </ul>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">ID : <?= $id ?></li>
-                <li class="list-group-item">Name : <?= $f_name ?> <?= $l_name ?></li>
-                <li class="list-group-item">User Type : <?= $type ?></li>
-            </ul>
         </div>
 
-        <!--====================  NOTICE BOARD    ====================-->
-        <!-- <h1 class="h11">Notice Board</h1> -->
+        <!--==================== NOTICE BOARD ====================-->
         <div class="card card_1 col-sm-6 mb-3 mb-sm-0">
             <div class="card-body ">
                 <h1 class="h13">Notice Board</h1>
@@ -160,29 +176,29 @@ $type = $_SESSION['userType'];
         ?>
 
             <?php
-            $i = 1;
-            while ($info = mysqli_fetch_array($query)) {
-                $notice_review_id = $info['notice_id'];
-                $title = $info['title'];
-                $content = $info['content'];
-                $posted_by = $info['posted_by'];
-                $pririty_level = $info['priority_level'];
+                $i = 1;
+                while ($info = mysqli_fetch_array($query)) {
+                    $notice_review_id = $info['notice_id'];
+                    $title = $info['title'];
+                    $content = $info['content'];
+                    $posted_by = $info['posted_by'];
+                    $pririty_level = $info['priority_level'];
 
-            ?>
-                <div class="card card_1 col-sm-6 mb-3 mb-sm-0">
-                    <h5 class="card-header"><?= $pririty_level ?></h5>
-                    <div class="card-body">
-                        <h5 class="card-title"><?= $title ?></h5>
-                        <p class="card-text"><?= $content ?></p>
-                        <p class="card-text">Posted By ID <?= $posted_by ?></p>
-                        <!-- <a href="#" class="btn btn-primary"></a> -->
+                ?>
+                    <div class="card card_1 col-sm-6 mb-3 mb-sm-0">
+                        <h5 class="card-header">Pririty Level: <?= $pririty_level ?></h5>
+                        <div class="card-body">
+                            <h5 class="card-title">Title: <?= $title ?></h5>
+                            <p class="card-text"><?= $content ?></p>
+                            <p class="card-text">Posted By ID <?= $posted_by ?></p>
+                            <!-- <a href="#" class="btn btn-primary"></a> -->
+                        </div>
                     </div>
-                </div>
-        <?php
+            <?php
             }
         }
         ?>
-    </section>
+    </div>
 
     <script src="homepage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

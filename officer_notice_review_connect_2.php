@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $posted_by = $_POST['posted_by'];
     $content = $_POST['content'];
 
-    $stmt = $conn->prepare("INSERT INTO notice_review (title, content, posted_by, priority_level) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO notice_board (title, content, posted_by, priority_level) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $title, $content, $posted_by, $priority_level);
 
     if ($stmt->execute()) {

@@ -72,20 +72,21 @@ $id = $_SESSION['ID'];
             <h5 class="card-title" style="text-align: center; font-weight:bold; font-size:30px;">Project Status</h5>
         </div>
         <div class="card-body">
-            <table class="table">
+            <table class="table text-center">
                 <thead>
                     <tr>
                         <th>Serial Number</th>
                         <th>Project ID</th>
                         <th>Project Title</th>
                         <th>Status</th>
+                        <th>Comment</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     include 'db.php';
 
-                    $sql = "SELECT project_id, project_title, status FROM  projects where student_id1 = $id";
+                    $sql = "SELECT project_id, project_title, status, comment FROM  projects where student_id1 = $id";
                     $query = mysqli_query($conn, $sql);
 
                     if (mysqli_num_rows($query) > 0) {
@@ -97,6 +98,7 @@ $id = $_SESSION['ID'];
                             $project_id = $info['project_id'];
                             $project_title = $info['project_title'];
                             $status = $info['status'];
+                            $comment = $info['comment'];
                         ?>
                 <tbody>
                     <tr>
@@ -104,6 +106,7 @@ $id = $_SESSION['ID'];
                         <td><?= $project_id ?></td>
                         <td><?= $project_title ?></td>
                         <td><?= $status ?></td>
+                        <td><?= !empty($comment) ? $comment : 'N/A' ?></td>
                     </tr>
                 </tbody>
         <?php

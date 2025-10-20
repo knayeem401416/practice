@@ -245,7 +245,7 @@
                 <?php
                 include 'db.php';
 
-                $sql = "SELECT project_id, project_title, mentor_id, student_id1,student_id2, status, pdf FROM  projects";
+                $sql = "SELECT project_id, project_title, mentor_id, student_id1,student_id2, status, pdf, comment FROM  projects";
                 $query = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($query) > 0) {
@@ -261,7 +261,7 @@
                             <th scope="col">Student ID 2</th>
                             <th scope="col">Status</th>
                             <th scope="col">PDF name</th>
-
+                            <th scope="col">Comment</th>
                         </tr>
                     </thead>
                     <?php
@@ -274,7 +274,7 @@
                         $student_id2 = $info['student_id2'];
                         $status = $info['status'];
                         $pdf = $info['pdf'];
-
+                        $comment = $info['comment'];
                     ?>
                         <tbody>
                             <tr>
@@ -283,10 +283,10 @@
                                 <td><?= $project_title ?></td>
                                 <td><?= $mentor_id ?></td>
                                 <td><?= $student_id1 ?></td>
-                                <td><?= $student_id2 ?></td>
+                                <td><?= !empty($student_id2) ? $student_id2 : 'N/A' ?></td>
                                 <td><?= $status ?></td>
                                 <td><?= $pdf ?></td>
-
+                                <td><?= !empty($comment) ? $comment : 'N/A' ?></td>
                             </tr>
                         <?php
                     }
@@ -297,9 +297,12 @@
                                 <th scope="col">#</th>
                                 <th scope="col">ID</th>
                                 <th scope="col">Title</th>
-                                <th scope="col">Content</th>
-                                <th scope="col">Posted By</th>
-                                <th scope="col">Pririty</th>
+                                <th scope="col">Mentor ID</th>
+                                <th scope="col">Student ID 1</th>
+                                <th scope="col">Student ID 2</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">PDF name</th>
+                                <th scope="col">Comment</th>
                             </tr>
                         </thead>
                     <?php
@@ -325,7 +328,7 @@
                 <?php
                 include 'db.php';
 
-                $sql = "SELECT user_id, f_name, l_name, contact,password, age, gender, type FROM  user";
+                $sql = "SELECT user_id, f_name, l_name, contact,password, dob, age, gender, type FROM  user";
                 $query = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($query) > 0) {
@@ -339,10 +342,10 @@
                             <th scope="col">Last Name</th>
                             <th scope="col">Contact Num</th>
                             <th scope="col">Password</th>
+                            <th scope="col">DoB</th>
                             <th scope="col">Age</th>
                             <th scope="col">Gender</th>
                             <th scope="col">type</th>
-
                         </tr>
                     </thead>
                     <?php
@@ -353,6 +356,7 @@
                         $mentor_id = $info['l_name'];
                         $student_id1 = $info['contact'];
                         $student_id2 = $info['password'];
+                        $dob = $info['dob'];
                         $status = $info['age'];
                         $pdf = $info['gender'];
                         $pdf_1 = $info['type'];
@@ -366,10 +370,10 @@
                                 <td><?= $mentor_id ?></td>
                                 <td><?= $student_id1 ?></td>
                                 <td><?= $student_id2 ?></td>
+                                <td><?= $dob ?></td>
                                 <td><?= $status ?></td>
                                 <td><?= $pdf ?></td>
                                 <td><?= $pdf_1 ?></td>
-
                             </tr>
                         <?php
                     }
@@ -379,10 +383,13 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">ID</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Content</th>
-                                <th scope="col">Posted By</th>
-                                <th scope="col">Pririty</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Contact Num</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">type</th>
                             </tr>
                         </thead>
                     <?php
@@ -416,8 +423,6 @@
                             <th scope="col">Num</th>
                             <th scope="col">Subject</th>
                             <th scope="col">Message</th>
-
-
                         </tr>
                     </thead>
                     <?php
