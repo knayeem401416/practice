@@ -94,6 +94,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-bottom: 10px;
         border: 1px solid #ffb3b3;
     }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        bottom: 20px;
+        cursor: pointer;
+        color: #6c757d;
+        font-size: 18px;
+        z-index: 3;
+        user-select: none;
+        line-height: 1;
+        transition: color 0.2s ease;
+    }
 </style>
 
 <body>
@@ -107,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="homepage.php" class="nav__link">Home</a>
                     </li>
                     <li class="nav__item">
-                        <a href="#" class="nav__link">About Us</a>
+                        <a href="about_us.php" class="nav__link">About Us</a>
                     </li>
                     <li class="nav__item">
                         <a href="#" class="nav__link">Services</a>
@@ -138,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!--==================== LOGIN ====================-->
     <div class="login" id="login">
-        <form action="homepage.php" class="login__form" method="POST">
+        <form action="contact_page.php" class="login__form" method="POST">
             <h2 class="login__title">Log In</h2>
             <?php if (!empty($errorMsg)): ?>
                 <div class="login__error"><?= htmlspecialchars($errorMsg) ?></div>
@@ -149,10 +162,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" placeholder="Enter your ID" id="id" name="id" class="login__input">
                 </div>
 
-                <div>
+                <div class="position-relative">
                     <label for="password" class="login__label">Password</label>
-                    <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input">
+                    <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input pe-5" required>
+                    <i class="ri-eye-off-line password-toggle" id="togglePassword" role="button" tabindex="0" aria-label="Toggle password visibility"></i>
                 </div>
+
                 <div>
                     <label for="userType" class="login__label">User Type</label>
                     <select id="userType" name="userType" class="login__select" required>
@@ -198,10 +213,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="name">Name:</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
-
+                    
                     <div class="form-group mb-3">
                         <label for="mobile">Mobile Number:</label>
-                        <input type="text" class="form-control" id="mobile" name="mobile" required>
+                        <input type="text" class="form-control" id="mobile" name="mobile" pattern="\d{11}" maxlength="11" title="Mobile number must be exactly 11 digits" required>
                     </div>
 
                     <div class="form-group mb-3">
@@ -227,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="footer-col-1">
             <ul>
-                <li>About Us</li>
+                <li><a href="about_us.php">About Us</a></li>
                 <li>Contact Us</li>
                 <li>FAQs</li>
                 <li>Support</li>
@@ -258,5 +273,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         </script>
     <?php endif; ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const togglePassword = document.getElementById("togglePassword");
+            const passwordInput = document.getElementById("password");
+
+            togglePassword.addEventListener("click", function () {
+                // Toggle input type between password/text
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+
+                // Toggle icon class (eye / eye-off)
+                this.classList.toggle("ri-eye-off-line");
+                this.classList.toggle("ri-eye-line");
+            });
+
+            // Optional: allow pressing Enter key on the icon for accessibility
+            togglePassword.addEventListener("keypress", function (e) {
+                if (e.key === "Enter" || e.key === " ") {
+                    togglePassword.click();
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

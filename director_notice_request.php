@@ -70,7 +70,7 @@ $id = $_SESSION['ID'];
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title">Notice Board Data Request Entry</h3>
-                        <form class="row g-3" action="mentor_notice_review_connect.php" method="post">
+                        <form class="row g-3" action="director_notice_review_connect.php" method="post">
                             <div class="col-md-4">
                                 <label for="validationDefault06" class="form-label">Title</label>
                                 <input type="text" class="form-control" id="validationDefault06" name="title" required />

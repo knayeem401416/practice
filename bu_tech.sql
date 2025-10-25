@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2025 at 06:25 PM
+-- Generation Time: Oct 25, 2025 at 06:54 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -41,9 +41,8 @@ CREATE TABLE `contact` (
 
 INSERT INTO `contact` (`contact_id`, `name`, `num`, `subject`, `message`) VALUES
 (6, 'sheoti', 1233445656, 'cu', 'saddad'),
-(7, 'Sheoti', 23132, 'con1', 'sadda'),
-(8, 'Sheoti', 23132, 'con1', 'adada'),
-(9, 'Sheoti', 23132, 'con1', 'ddd');
+(10, 'Fahim ', 32323, 'Mentor Info', 'Need Rifat Sir Info'),
+(11, 'Rimu', 2225556, 'tryhgjghjt', 'ghndthgkjhjk,');
 
 -- --------------------------------------------------------
 
@@ -65,11 +64,8 @@ CREATE TABLE `notice_board` (
 --
 
 INSERT INTO `notice_board` (`notice_id`, `title`, `content`, `date_posted`, `posted_by`, `priority_level`) VALUES
-(27, 'this', '         adsadasdsadadas         ', '0000-00-00', 50, 'mid'),
-(28, 'THAT', 'hhhhhhhhhhhhhhhhhhhhhhhhh                  ', '0000-00-00', 50, 'high'),
-(29, 'test', 'test1', '0000-00-00', 51, 'high'),
-(30, 'sdd', 'sdds', '0000-00-00', 51, 'high'),
-(31, 'Not in Office', 'Outside Dhaka', '0000-00-00', 51, 'low');
+(32, 'Mentor notice 1', 'Outside Dhaka', '0000-00-00', 54, 'mid'),
+(33, 'Director 1st Notice', 'Long time Holiday', '0000-00-00', 51, 'high');
 
 -- --------------------------------------------------------
 
@@ -91,10 +87,9 @@ CREATE TABLE `notice_review` (
 --
 
 INSERT INTO `notice_review` (`notice_review_id`, `title`, `content`, `date_posted`, `posted_by`, `priority_level`) VALUES
-(19, 'test', 'test1', '0000-00-00 00:00:00', 50, 'high'),
-(20, 'test2', 'test1234', '0000-00-00 00:00:00', 51, 'mid'),
-(21, 'Not in Office ', 'Outside Dhaka', '0000-00-00 00:00:00', 51, 'low'),
-(22, 'dsd', 'dsd', '0000-00-00 00:00:00', 51, 'high');
+(23, 'Mentor notice 1', 'Outside Dhaka', '0000-00-00 00:00:00', 54, 'mid'),
+(24, 'Director 1st Notice', 'Long time Holiday', '0000-00-00 00:00:00', 51, 'high'),
+(25, '5retaeryer', 'hgdthuyjtdyhuj', '0000-00-00 00:00:00', 54, 'mid');
 
 -- --------------------------------------------------------
 
@@ -110,36 +105,40 @@ CREATE TABLE `projects` (
   `student_id2` int(11) DEFAULT NULL,
   `student_id3` int(11) DEFAULT NULL,
   `student_id4` int(11) DEFAULT NULL,
-  `status` varchar(10) NOT NULL,
+  `status` varchar(255) NOT NULL,
   `submission_date` date NOT NULL,
   `approval_date` date NOT NULL,
   `pdf` varchar(300) NOT NULL,
   `comment` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `projects`
+-- Table structure for table `student_registration`
 --
 
-INSERT INTO `projects` (`project_id`, `project_title`, `mentor_id`, `student_id1`, `student_id2`, `student_id3`, `student_id4`, `status`, `submission_date`, `approval_date`, `pdf`, `comment`) VALUES
-(33, 'trail1', 50, 52, NULL, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti.CV.pdf', 'dsds'),
-(34, 'trail2', 50, 53, 52, NULL, NULL, 'Rejected', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Algorithm_Lab.pdf', 'add more figure'),
-(35, 'trail3', 50, 53, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project.pdf', NULL),
-(36, 'trail4', 50, 53, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project_2.pdf', NULL),
-(37, 'trail5', 50, 52, 53, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti.CV.pdf', NULL),
-(40, 'dasd', 50, 52, NULL, NULL, NULL, 'Rejected', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Algorithm_Lab.pdf', 'so many ai'),
-(41, 'dfsdfafaf', 50, 52, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti.CV.pdf', 'fff'),
-(42, 'fasfafaf', 54, 52, 53, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project_2.pdf', NULL),
-(43, 'dadafafa', 50, 52, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project.pdf', 'ddd'),
-(44, 'gdgfdfg', 50, 52, NULL, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Algorithm_Lab.pdf', NULL),
-(45, 'dadada', 54, 52, 53, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti.CV.pdf', NULL),
-(46, 'dadadda', 50, 52, NULL, NULL, NULL, 'Rejected', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project_2.pdf', 'do proper data'),
-(47, 'addad', 50, 52, NULL, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project.pdf', NULL),
-(48, 'gsdfdf', 50, 52, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project.pdf', 'do it more example'),
-(55, 'project1', 54, 62, NULL, NULL, NULL, 'Rejected', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project.pdf', 'not good project'),
-(56, 'project2', 54, 62, NULL, NULL, NULL, 'Approved', '0000-00-00', '0000-00-00', 'Sheoti.CV.pdf', 'not good project'),
-(57, 'project3', 54, 62, NULL, NULL, NULL, 'Rechecked', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Algorithm_Lab.pdf', 'Ai detect'),
-(58, 'dad', 50, 62, NULL, NULL, NULL, 'Pending', '0000-00-00', '0000-00-00', 'Sheoti_202221063026_Project_2.pdf', NULL);
+CREATE TABLE `student_registration` (
+  `reg_id` int(11) NOT NULL,
+  `f_name` varchar(255) NOT NULL,
+  `l_name` varchar(255) NOT NULL,
+  `contact` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `dob` date NOT NULL,
+  `age` int(11) NOT NULL,
+  `gender` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `profile_pic` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student_registration`
+--
+
+INSERT INTO `student_registration` (`reg_id`, `f_name`, `l_name`, `contact`, `password`, `dob`, `age`, `gender`, `type`, `profile_pic`, `status`) VALUES
+(1, 'ppp', 'qqq', 2147483647, 'aaa', '2025-10-01', 23, 'M', 'Student', 'uploads/1761360154_DEF-007.PNG', 'Approved'),
+(2, 'dfsf', 'sffs', 2147483647, 'dddddddd', '2025-10-16', 22, 'M', 'Student', 'uploads/1761360189_DEF-006.PNG', 'Rejected');
 
 -- --------------------------------------------------------
 
@@ -157,7 +156,7 @@ CREATE TABLE `user` (
   `age` int(11) NOT NULL,
   `gender` varchar(1) NOT NULL,
   `type` varchar(10) NOT NULL,
-  `profile_pic` varchar(255) DEFAULT NULL
+  `profile_pic` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -171,7 +170,7 @@ INSERT INTO `user` (`user_id`, `f_name`, `l_name`, `contact`, `password`, `dob`,
 (52, 'Fahim', 'Ahmed', 366986986, 'fahim', '0000-00-00', 23, 'M', 'Student', 'uploads/1760811789_user2.jpg'),
 (53, 'Aqib', 'Khan', 45673, 'aqib', '0000-00-00', 23, 'M', 'Student', 'uploads/1760843433_user1.jpg'),
 (54, 'Nayeem', 'Khan', 23123, 'nayeem', '2019-11-19', 34, 'M', 'Mentor', 'uploads/1760811593_user6.jpg'),
-(62, 'Jahid', 'Khan', 32443, 'jahid', '2025-10-01', 21, 'M', 'Student', 'uploads/1760948404_user7.jpg');
+(68, 'ppp', 'qqq', 2147483647, 'aaa', '2025-10-01', 23, 'M', 'Student', 'uploads/1761360154_DEF-007.PNG');
 
 --
 -- Indexes for dumped tables
@@ -208,6 +207,12 @@ ALTER TABLE `projects`
   ADD KEY `student_id3` (`student_id3`,`student_id4`);
 
 --
+-- Indexes for table `student_registration`
+--
+ALTER TABLE `student_registration`
+  ADD PRIMARY KEY (`reg_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -221,31 +226,37 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `contact`
 --
 ALTER TABLE `contact`
-  MODIFY `contact_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `contact_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `notice_board`
 --
 ALTER TABLE `notice_board`
-  MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `notice_review`
 --
 ALTER TABLE `notice_review`
-  MODIFY `notice_review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `notice_review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+
+--
+-- AUTO_INCREMENT for table `student_registration`
+--
+ALTER TABLE `student_registration`
+  MODIFY `reg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- Constraints for dumped tables

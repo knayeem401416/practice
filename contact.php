@@ -7,12 +7,16 @@ if ($conn->connect_error) {
 
 // collect form data safely
 $name = $_POST['name'];
-$mobile = $_POST['mobile'];
+$mobile = trim($_POST['mobile']);
 $subject = $_POST['subject'];
 $message = $_POST['message'];
 
-// prepare SQL query
-$sql = "INSERT INTO contact (name, num, subject, message) VALUES ('$name', '$mobile', '$subject', '$message')";
+if (!preg_match('/^\d{11}$/', $mobile)) {
+    $errorMsg = "Mobile number must be exactly 11 digits.";
+} else {
+    // prepare SQL query
+    $sql = "INSERT INTO contact (name, num, subject, message) VALUES ('$name', '$mobile', '$subject', '$message')";
+}
 
 if ($conn->query($sql) === TRUE) {
     // redirect back to contact_page.php with success message
@@ -26,3 +30,6 @@ if ($conn->query($sql) === TRUE) {
 
 $conn->close();
 ?>
+$mobile = trim($_POST['mobile']);
+
+

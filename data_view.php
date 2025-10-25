@@ -58,6 +58,10 @@
                     <li class="nav__item">
                         <a href="officer_dashboard.php" class="nav__link">Dashboard</a>
                     </li>
+                       
+                    <li class="nav__item">
+                        <a href="officer_std_register_approve.php" class="nav__link">Registration Approve</a>
+                    </li>
 
                     <li class="nav__item">
                         <a href="data_entry.php" class="nav__link">Data Entry</a>

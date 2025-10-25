@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dob = $_POST['dob'];
     $age = $_POST['age'];
     $gender = $_POST['gender'];
-    $type = $_POST['type'];
+    $type = "Student";
+    $status = "Pending";
 
     // Handle profile picture upload
     $targetDir = "uploads/";
@@ -26,13 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (in_array(strtolower($fileType), $allowedTypes)) {
         if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $targetFilePath)) {
             // Insert data into user table
-            $sql = "INSERT INTO user (f_name, l_name, contact, password, dob, age, gender, type, profile_pic)
-                    VALUES ('$f_name', '$l_name', '$contact', '$password', '$dob', '$age', '$gender', '$type', '$targetFilePath')";
+            $sql = "INSERT INTO student_registration (f_name, l_name, contact, password, dob, age, gender, type, profile_pic, status)
+                    VALUES ('$f_name', '$l_name', '$contact', '$password', '$dob', '$age', '$gender', '$type', '$targetFilePath', '$status')";
             $result = mysqli_query($conn, $sql);
 
             if ($result) {
-                $user_id = mysqli_insert_id($conn);
-                header("Location: signup.php?success=1&id=$user_id");
+                header("Location: signup.php?success=1");
                 exit();
             } else {
                 header("Location: signup.php?error=1");

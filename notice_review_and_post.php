@@ -38,6 +38,7 @@ include 'db.php'; // Make sure this file contains your DB connection
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
                     <li class="nav__item"><a href="officer_dashboard.php" class="nav__link">Dashboard</a></li>
+                    <li class="nav__item"><a href="officer_std_register_approve.php" class="nav__link">Registration Approve</a></li>
                     <li class="nav__item"><a href="data_entry.php" class="nav__link">Data Entry</a></li>
                     <li class="nav__item"><a href="data_view.php" class="nav__link">Data View</a></li>
                     <li class="nav__item"><a href="notice_review_and_post.php" class="nav__link">Notice Review and Post</a></li>

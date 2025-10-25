@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php'; // your DB connection file
+include 'db.php';
 
 $errorMsg = "";
 $successMsg = "";
@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($ID) || empty($password) || empty($userType)) {
         $errorMsg = "Please fill in all fields.";
     } else {
-        // ✅ Check all 3: ID, password, and user type
         $sql = "SELECT * FROM user WHERE user_id = ? AND password = ? AND type = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "sss", $ID, $password, $userType);
@@ -21,11 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = mysqli_stmt_get_result($stmt);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            // ✅ Match found
             $_SESSION['ID'] = $ID;
             $_SESSION['userType'] = $userType;
 
-            // show success alert before redirect
             $successMsg = "Login Successful!";
             $redirectPage = "";
 
@@ -54,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            // ❌ Login failed
             $errorMsg = "❌ Login failed!";
         }
 
@@ -62,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,12 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .show-login {
-        display: flex; /* or whatever display type your JS uses */
+        display: flex;
     }
 
     .login__error {
-        background-color: #ffe0e0; /* light red background */
-        color: #b30000;            /* dark red text */
+        background-color: #ffe0e0; 
+        color: #b30000;
         padding: 10px;
         border-radius: 6px;
         font-weight: 600;
@@ -110,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </li>
 
                     <li class="nav__item">
-                        <a href="#" class="nav__link">About Us</a>
+                        <a href="about_us.php" class="nav__link">About Us</a>
                     </li>
 
                     <li class="nav__item">
@@ -161,10 +154,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" placeholder="Enter your ID" id="id" name="id" class="login__input" required>
                 </div>
 
-                <div>
+                <div style="position: relative;">
                     <label for="password" class="login__label">Password</label>
                     <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input" required>
+                    <i class="ri-eye-off-line" id="togglePassword" 
+                    style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: gray; font-size: 18px;"></i>
                 </div>
+
                 <div>
                     <label for="userType" class="login__label">User Type</label>
                     <select id="userType" name="userType" class="login__select" required>
@@ -286,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="footer-col-1">
             <ul>
-                <li>About Us</li>
+                <li><a href="about_us.php">About Us</a></li>
                 <li>Contact Us</li>
                 <li>FAQs</li>
                 <li>Support</li>
@@ -320,7 +316,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         </script>
     <?php endif; ?>
+    <script>
+        const passwordField = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
 
+        togglePassword.addEventListener("click", function () {
+            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+            passwordField.setAttribute("type", type);
+
+            // Toggle the icon
+            this.classList.toggle("ri-eye-line");
+            this.classList.toggle("ri-eye-off-line");
+        });
+    </script>
 </body>
 
 </html>

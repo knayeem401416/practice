@@ -5,7 +5,7 @@ include 'db.php';
 $errorMsg = "";
 $successMsg = "";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $ID = trim($_POST['id']);
     $password = trim($_POST['password']);
     $userType = trim($_POST['userType']);
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: none; 
     }
     .show-login { 
-        display: flex;
+        display: flex; 
     }
     .login__error { 
         background-color: #ffe0e0; 
@@ -91,7 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         bottom: 20px; 
     }
     .password-toggle1 { 
-        bottom: 10px;
+        bottom: 10px; 
+    }
+    .approval-section {
+        margin-top: 150px !important;
     }
 </style>
 </head>
@@ -119,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- Login Form -->
 <div class="login" id="login">
-    <form action="signup.php" class="login__form" method="POST">
+    <form action="" class="login__form" method="POST">
         <h2 class="login__title">Log In</h2>
         <?php if (!empty($errorMsg)): ?>
             <div class="login__error"><?= htmlspecialchars($errorMsg) ?></div>
@@ -148,83 +151,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div>
             <p class="login__signup">You do not have an account? <a href="signup.php">Sign up</a></p>
             <a href="#" class="login__forgot">You forgot your password</a>
-            <button type="submit" class="login__button">Log In</button>
+            <button type="submit" name="login" class="login__button">Log In</button>
         </div>
     </form>
     <i class="ri-close-line login__close" id="login-close"></i>
 </div>
 
-<!-- Sign Up Form -->
-<div class="container" style="margin-top: 150px;">
-    <div class="row justify-content-center bg-light border rounded" style="width: 50%; margin-left: auto; margin-right: auto;">
-        <div class="col-md-8 mt-5">
+<!-- Check Approval Section -->
+<div class="container my-5 approval-section">
+    <div class="card shadow-lg border-0 p-4 mx-auto" style="max-width: 500px;">
+        <h3 class="text-center mb-4">Check Registration Approval</h3>
 
-            <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success text-center">
-                    Signup successful!
-                </div>
-            <?php elseif (isset($_GET['error'])): ?>
-                <div class="alert alert-danger text-center">
-                    There was an error. Please try again.
-                </div>
-            <?php endif; ?>
+        <?php
+        $approveMsg = "";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_approve'])) {
+            $fname = trim($_POST['f_name']);
+            $lname = trim($_POST['l_name']);
+            $contact = trim($_POST['contact']);
+            $password = trim($_POST['password']);
 
-            <form action="signup_action.php" method="POST" enctype="multipart/form-data">
-                <h2 class="text-center mb-4">Create Account For Student</h2>
+            if (empty($fname) || empty($lname) || empty($contact) || empty($password)) {
+                $approveMsg = "<div class='alert alert-danger text-center'>⚠️ Please fill in all fields.</div>";
+            } else {
+                $sql = "SELECT status FROM student_registration WHERE f_name=? AND l_name=? AND contact=? AND password=?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "ssss", $fname, $lname, $contact, $password);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
 
-                <div class="form-group mb-3">
-                    <label>First Name</label>
-                    <input type="text" name="f_name" class="form-control" required>
-                </div>
+                if ($row = mysqli_fetch_assoc($result)) {
+                    $status = ucfirst($row['status']);
+                    if ($status === "Pending") {
+                        $approveMsg = "<div class='alert alert-warning text-center'>⏳ Your registration is pending for approval.</div>";
+                    } elseif ($status === "Rejected") {
+                        $approveMsg = "<div class='alert alert-danger text-center'>❌ Your registration has been rejected.</div>";
+                    } elseif ($status === "Approved") {
+                        $sqlUser = "SELECT user_id FROM user WHERE f_name=? AND l_name=? AND contact=? AND password=?";
+                        $stmtUser = mysqli_prepare($conn, $sqlUser);
+                        mysqli_stmt_bind_param($stmtUser, "ssss", $fname, $lname, $contact, $password);
+                        mysqli_stmt_execute($stmtUser);
+                        $resultUser = mysqli_stmt_get_result($stmtUser);
 
-                <div class="form-group mb-3">
-                    <label>Last Name</label>
-                    <input type="text" name="l_name" class="form-control" required>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Contact Number</label>
-                    <input type="text" name="contact" class="form-control" pattern="\d{11}" maxlength="11" title="Contact number must be exactly 11 digits" required>
-                </div>
-
-                <div class="form-group mb-3 position-relative">
-                    <label>Password</label>
-                    <input type="password" name="password" id="signupPassword" class="form-control pe-5" required>
-                    <i class="ri-eye-off-line password-toggle1" id="toggleSignupPassword" role="button" tabindex="0"></i>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Date of Birth</label>
-                    <input type="date" name="dob" class="form-control" required>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Age</label>
-                    <input type="number" name="age" id="signupAge" class="form-control" min="0" required>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Gender</label>
-                    <select name="gender" class="form-control" required>
-                        <option value="" disabled selected>Select</option>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                    </select>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Profile Picture</label>
-                    <input type="file" name="profile_pic" class="form-control" accept="image/*" required>
-                </div>
-
-                <div>
-                    <p class="form-group mb-3">
-                        Check Account <a href="register_approve_check.php">Approve or not</a>!
-                    </p>
-                    <button type="submit" class="btn btn-primary w-100 mb-5">Sign Up</button>
-                </div>
-            </form>
+                        if ($userRow = mysqli_fetch_assoc($resultUser)) {
+                            $userID = $userRow['user_id'];
+                            $approveMsg = "<div class='alert alert-success text-center'>✅ Registration approved!<br>Your User ID is: <strong>$userID</strong></div>";
+                        } else {
+                            $approveMsg = "<div class='alert alert-info text-center'>⚠️ Approved but user record not created yet.</div>";
+                        }
+                        mysqli_stmt_close($stmtUser);
+                    } else {
+                        $approveMsg = "<div class='alert alert-secondary text-center'>ℹ️ Unknown status.</div>";
+                    }
+                } else {
+                    $approveMsg = "<div class='alert alert-danger text-center'>❌ No matching record found!</div>";
+                }
+                mysqli_stmt_close($stmt);
+            }
+        }
+        ?>
+        
+        <div class="mt-3">
+            <?= $approveMsg ?>
         </div>
+
+        <form method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="f_name" class="form-label">First Name</label>
+                <input type="text" name="f_name" id="f_name" class="form-control" placeholder="Enter first name" required>
+            </div>
+            <div class="mb-3">
+                <label for="l_name" class="form-label">Last Name</label>
+                <input type="text" name="l_name" id="l_name" class="form-control" placeholder="Enter last name" required>
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="text" name="contact" id="contact" class="form-control" placeholder="Enter contact number" required>
+            </div>
+            <div class="mb-3 position-relative">
+                <label for="approve_password" class="form-label">Password</label>
+                <input type="password" name="password" id="approve_password" class="form-control pe-5" placeholder="Enter password" required>
+                <i class="ri-eye-off-line password-toggle1" id="toggleApprovePassword" role="button" tabindex="0"></i>
+            </div>
+            <div class="text-center">
+                <button type="submit" name="check_approve" class="btn btn-primary w-100">Check Status</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -261,7 +272,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="homepage.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
     // Open login if error exists
     <?php if (!empty($errorMsg)): ?>
     document.getElementById("login").classList.add("show-login");
@@ -279,23 +289,16 @@ document.addEventListener('DOMContentLoaded', function () {
             toggle.classList.toggle('ri-eye-off-line', !isPassword);
         });
     }
-    setupPasswordToggle('togglePassword','password');
-    setupPasswordToggle('toggleSignupPassword','signupPassword');
+    setupPasswordToggle('togglePassword', 'password');
+    setupPasswordToggle('toggleApprovePassword', 'approve_password');
 
-    // Contact number validation: digits only, max 11
-    const contactInput = document.querySelector('input[name="contact"]');
-    contactInput.addEventListener('input', function(){
-        this.value = this.value.replace(/\D/g,'').slice(0,11);
-    });
-
-    // Age validation: min 1 if 0 or negative
-    const ageInput = document.getElementById('signupAge');
-    ageInput.addEventListener('input', function(){
-        if(this.value !== '' && this.value < 1){
-            this.value = 1;
-        }
-    });
-
+    // Contact field validation
+    const contactInput = document.getElementById('contact');
+    if (contactInput) {
+        contactInput.addEventListener('input', function(){
+            this.value = this.value.replace(/\D/g, '').slice(0, 11);
+        });
+    }
 });
 </script>
 </body>
