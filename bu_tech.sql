@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 25, 2025 at 06:54 AM
+-- Generation Time: Oct 25, 2025 at 07:15 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `contact` (
   `contact_id` int(255) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `num` int(20) NOT NULL,
+  `num` varchar(255) NOT NULL,
   `subject` varchar(50) NOT NULL,
   `message` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -40,9 +40,11 @@ CREATE TABLE `contact` (
 --
 
 INSERT INTO `contact` (`contact_id`, `name`, `num`, `subject`, `message`) VALUES
-(6, 'sheoti', 1233445656, 'cu', 'saddad'),
-(10, 'Fahim ', 32323, 'Mentor Info', 'Need Rifat Sir Info'),
-(11, 'Rimu', 2225556, 'tryhgjghjt', 'ghndthgkjhjk,');
+(6, 'sheoti', '1233445656', 'cu', 'saddad'),
+(10, 'Fahim ', '32323', 'Mentor Info', 'Need Rifat Sir Info'),
+(11, 'Rimu', '2225556', 'tryhgjghjt', 'ghndthgkjhjk,'),
+(14, '233', '2147483647', 'dzxcx', 'xczcdxszc'),
+(15, '2323', '32322332323', '3232323232323232323232323', '2323232323');
 
 -- --------------------------------------------------------
 
@@ -122,7 +124,7 @@ CREATE TABLE `student_registration` (
   `reg_id` int(11) NOT NULL,
   `f_name` varchar(255) NOT NULL,
   `l_name` varchar(255) NOT NULL,
-  `contact` int(11) NOT NULL,
+  `contact` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `dob` date NOT NULL,
   `age` int(11) NOT NULL,
@@ -137,8 +139,8 @@ CREATE TABLE `student_registration` (
 --
 
 INSERT INTO `student_registration` (`reg_id`, `f_name`, `l_name`, `contact`, `password`, `dob`, `age`, `gender`, `type`, `profile_pic`, `status`) VALUES
-(1, 'ppp', 'qqq', 2147483647, 'aaa', '2025-10-01', 23, 'M', 'Student', 'uploads/1761360154_DEF-007.PNG', 'Approved'),
-(2, 'dfsf', 'sffs', 2147483647, 'dddddddd', '2025-10-16', 22, 'M', 'Student', 'uploads/1761360189_DEF-006.PNG', 'Rejected');
+(7, 'ppp', 'qqq', '23123123131', 'aaa', '2025-10-03', 21, 'M', 'Student', 'uploads/1761369136_DEF-005.PNG', 'Approved'),
+(8, 'ddd', 'sss', '21312312313', 'www', '2025-10-15', 23, 'F', 'Student', 'uploads/1761369160_DEF-002_01.PNG', 'Rejected');
 
 -- --------------------------------------------------------
 
@@ -150,7 +152,7 @@ CREATE TABLE `user` (
   `user_id` int(5) NOT NULL,
   `f_name` varchar(10) NOT NULL,
   `l_name` varchar(10) NOT NULL,
-  `contact` int(11) NOT NULL,
+  `contact` varchar(255) NOT NULL,
   `password` varchar(10) NOT NULL,
   `dob` date NOT NULL,
   `age` int(11) NOT NULL,
@@ -164,13 +166,13 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `f_name`, `l_name`, `contact`, `password`, `dob`, `age`, `gender`, `type`, `profile_pic`) VALUES
-(40, 'Sheoti', 'Khanam', 6453, 'sheoti', '0000-00-00', 40, 'F', 'Officer', 'uploads/3220811593_user3.jpg'),
-(50, 'Zara', 'Akter', 345262, 'zara', '0000-00-00', 45, 'M', 'Mentor', 'uploads/1712311593_user4.jpg'),
-(51, 'Nazmul', 'Hossain', 1234567, 'nazmul', '0000-00-00', 34, 'M', 'Director', 'uploads/1131313593_user5.jpg'),
-(52, 'Fahim', 'Ahmed', 366986986, 'fahim', '0000-00-00', 23, 'M', 'Student', 'uploads/1760811789_user2.jpg'),
-(53, 'Aqib', 'Khan', 45673, 'aqib', '0000-00-00', 23, 'M', 'Student', 'uploads/1760843433_user1.jpg'),
-(54, 'Nayeem', 'Khan', 23123, 'nayeem', '2019-11-19', 34, 'M', 'Mentor', 'uploads/1760811593_user6.jpg'),
-(68, 'ppp', 'qqq', 2147483647, 'aaa', '2025-10-01', 23, 'M', 'Student', 'uploads/1761360154_DEF-007.PNG');
+(40, 'Sheoti', 'Khanam', '6453', 'sheoti', '0000-00-00', 40, 'F', 'Officer', 'uploads/3220811593_user3.jpg'),
+(50, 'Zara', 'Akter', '345262', 'zara', '0000-00-00', 45, 'M', 'Mentor', 'uploads/1712311593_user4.jpg'),
+(51, 'Nazmul', 'Hossain', '1234567', 'nazmul', '0000-00-00', 34, 'M', 'Director', 'uploads/1131313593_user5.jpg'),
+(52, 'Fahim', 'Ahmed', '366986986', 'fahim', '0000-00-00', 23, 'M', 'Student', 'uploads/1760811789_user2.jpg'),
+(53, 'Aqib', 'Khan', '45673', 'aqib', '0000-00-00', 23, 'M', 'Student', 'uploads/1760843433_user1.jpg'),
+(54, 'Nayeem', 'Khan', '23123', 'nayeem', '2019-11-19', 34, 'M', 'Mentor', 'uploads/1760811593_user6.jpg'),
+(69, 'ppp', 'qqq', '23123123131', 'aaa', '2025-10-03', 21, 'M', 'Student', 'uploads/1761369136_DEF-005.PNG');
 
 --
 -- Indexes for dumped tables
@@ -226,7 +228,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `contact`
 --
 ALTER TABLE `contact`
-  MODIFY `contact_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `contact_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `notice_board`
@@ -250,13 +252,13 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `student_registration`
 --
 ALTER TABLE `student_registration`
-  MODIFY `reg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `reg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- Constraints for dumped tables
